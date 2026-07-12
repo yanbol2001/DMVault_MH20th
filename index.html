@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DMVault MH20th</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#263238">
+</head>
+<body>
+<header><div class="top">
+<div class="brand"><a href="index.html">DMVault MH20th</a></div>
+<nav>
+<a href="index.html" class="active">彩色對打機總覽</a>
+<a href="guide.html">基本操作</a>
+<a href="evolution/index.html">進化條件</a>
+<a href="evolution/dex/index.html">圖鑑</a>
+<a href="stage.html">關卡</a>
+<a href="background.html">背景</a>
+</nav>
+</div></header>
+<main class="home-main">
+  <section class="home-hero">
+    <div class="home-kicker">Monster Hunter 20th Digital Monster Database</div>
+    <h1 class="home-title">DMVault MH20th</h1>
+    <p class="home-subtitle">Monster Hunter 20th Digital Monster Database</p>
+    <p class="home-description">《Monster Hunter 20th Digital Monster》玩家資料整理網站。</p>
+  </section>
+
+  <section class="home-section">
+    <h2 class="home-section-title">快速入口</h2>
+    <div class="quick-grid">
+      <a class="quick-card" href="guide.html"><span class="quick-icon">📖</span><strong>基本操作</strong><span>操作方式、培育、戰鬥、睡眠與設定等說明。</span></a>
+      <a class="quick-card" href="evolution/index.html"><span class="quick-icon">🌳</span><strong>進化條件</strong><span>瀏覽各階段怪獸與完整進化路線。</span></a>
+      <a class="quick-card" href="evolution/dex/index.html"><span class="quick-icon">📚</span><strong>圖鑑</strong><span>以 SVG 技能樹方式查看全部怪獸。</span></a>
+      <a class="quick-card" href="stage.html"><span class="quick-icon">⚔️</span><strong>關卡</strong><span>查看各關敵人、強度與通關解鎖背景。</span></a>
+      <a class="quick-card" href="background.html"><span class="quick-icon">🖼️</span><strong>背景</strong><span>背景圖片與各自解鎖條件一覽。</span></a>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <h2 class="home-section-title">資料庫資訊</h2>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">怪獸</div><div class="stat-value">38</div></div>
+      <div class="stat-card"><div class="stat-label">關卡</div><div class="stat-value">8</div></div>
+      <div class="stat-card"><div class="stat-label">背景</div><div class="stat-value">17</div></div>
+      <div class="stat-card"><div class="stat-label">版本</div><div class="stat-value">v6.4</div></div>
+    </div>
+  </section>
+
+  <section class="home-section home-two-col">
+    <div class="home-panel">
+      <span class="update-version">Version 6.4</span>
+      <h2 class="home-section-title">最近更新</h2>
+      <ul class="update-list">
+        <li>完成純 Web PWA 架構</li>
+        <li>整合基本操作</li>
+        <li>整合進化條件與 SVG 圖鑑</li>
+        <li>加入關卡與背景頁面</li>
+        <li>統一網站導覽列</li>
+      </ul>
+    </div>
+    <div class="home-panel">
+      <h2 class="home-section-title">網站內容</h2>
+      <p style="line-height:1.85;margin:0;color:#4d4a44">
+        收錄進化條件、圖鑑、關卡、背景與基本操作。
+      </p>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <h2 class="home-section-title">特別感謝</h2>
+    <div class="credit-grid">
+      <article class="credit-card">
+        <h3>原始資料整理</h3>
+        <div class="credit-name">iLoveHTC、李溫</div>
+        <p>感謝提供《Monster Hunter 20th Digital Monster》試算表資料。</p>
+        <p><strong>主要資料來源</strong></p>
+        <p><a href="https://docs.google.com/spreadsheets/d/1eNvmUexJ3GboGnlOtAEyy9f0mNXdMVbEwDO5P8cYfyg/edit?gid=184361674#gid=184361674" target="_blank" rel="noopener">Google 試算表</a></p>
+      </article>
+      <article class="credit-card">
+        <h3>參考資料</h3>
+        <div class="credit-name">Humulos</div>
+        <p><a href="https://humulos.com/digimon/dmc/" target="_blank" rel="noopener">Digitama Hatchery</a></p>
+      </article>
+      <article class="credit-card">
+        <h3>網站製作</h3>
+        <div class="credit-name">紫硯</div>
+      </article>
+    </div>
+  </section>
+
+  <footer class="home-footer">
+    <strong>DMVault MH20th · Version 6.4</strong><br>
+    本網站為玩家自製資料整理網站，僅供研究、攻略整理與交流使用。Monster Hunter、Digimon 及相關名稱、圖片與商標均屬原權利人所有。
+  </footer>
+</main>
+<script>
+if("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js");
+</script>
+</body>
+</html>

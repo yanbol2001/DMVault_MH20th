@@ -1,0 +1,9 @@
+{
+  "name": "DMVault MH20th",
+  "short_name": "DMVault",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f5ef",
+  "theme_color": "#263238",
+  "lang": "zh-Hant"
+}
