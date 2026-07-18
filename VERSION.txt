@@ -1,1 +1,3 @@
-DMVault MH20th V7 Phase 2.1 - Dex Rebuild
+DMVault MH20th V7 Phase 2.2
+- 移除舊版最愛星號
+- 修正圖鑑點擊跳到進化頁指定怪獸
