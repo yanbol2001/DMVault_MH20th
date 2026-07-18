@@ -60,6 +60,45 @@ button.fav,button.favorite,#fav,#favorite,[data-action="fav"],[data-action="favo
  .dm-evolution-search input{width:100%;max-width:none}
 }
 
+
+/* V7 Phase 3：DMVault 單列培養計時器（與哥吉拉版一致） */
+.target{position:relative}
+.target .ownedmark{
+  left:auto!important;right:5px!important;top:5px!important;
+  width:22px!important;height:22px!important;min-width:22px!important;
+  padding:0!important;margin:0!important;border:1.5px solid #168a55!important;
+  border-radius:5px!important;background:#fff!important;color:#168a55!important;
+  display:grid!important;place-items:center!important;cursor:pointer!important;
+  box-shadow:0 2px 5px #0002!important;font-size:15px!important;line-height:1!important;
+  z-index:8!important;user-select:none!important
+}
+.target .ownedmark.on{background:#168a55!important;color:#fff!important}
+.target .ownedmark .owned-bigcheck{width:auto!important;height:auto!important;margin:0!important;background:transparent!important;color:inherit!important;font-size:15px!important}
+.target .name h3{padding-right:20px}
+.timer-tools{margin-top:auto;padding-top:12px}
+.timer-slot{display:grid;grid-template-columns:minmax(0,1fr);width:100%}
+.timer-start,.timer-running{
+  grid-area:1/1;box-sizing:border-box;width:100%;height:36px;min-height:36px;max-height:36px;
+  margin:0;border:1px solid #4d616b;border-radius:7px;background:linear-gradient(180deg,#fff,#e7ecef);
+  color:#26373f;font-weight:900
+}
+.timer-start{padding:4px 8px;cursor:pointer;font-size:13px}
+.timer-running{display:flex;align-items:center;justify-content:center;gap:5px;padding:4px 5px;overflow:hidden;white-space:nowrap}
+.timer-running[hidden],.timer-start[hidden]{display:none!important}
+.timer-time{flex:1 1 auto;min-width:0;text-align:center;color:#26373f;font-size:14px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.timer-controls{display:flex;flex:0 0 auto;align-items:center;gap:3px}
+.timer-controls button{display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:34px;height:25px;min-height:25px;padding:1px 6px;border:1px solid #536973;border-radius:6px;background:#fff;color:#26373f;font-size:11px;font-weight:900;line-height:1;cursor:pointer}
+.timer-tools.is-frozen .timer-running{border-color:#63799b;background:linear-gradient(180deg,#eef4fc,#d9e4f3)}
+.timer-tools.is-frozen .timer-freeze{background:#344b6b;border-color:#344b6b;color:#fff}
+.timer-tools.is-complete .timer-running{border-color:#2f8c56;background:linear-gradient(180deg,#effaf3,#d8efdf)}
+@media(max-width:520px){
+ .target .ownedmark{width:20px!important;height:20px!important;min-width:20px!important;font-size:14px!important}
+ .target .ownedmark .owned-bigcheck{font-size:14px!important}
+ .target .name h3{padding-right:17px}
+ .timer-start,.timer-running{height:34px;min-height:34px;max-height:34px}
+ .timer-time{font-size:13px}.timer-controls button{min-width:31px;height:23px;min-height:23px;padding:1px 4px;font-size:10px}
+}
+
 </style>
 <style id="dm-unified-header-style">
 .dm-site-header{position:sticky;top:0;z-index:9999;background:#fffdf8ee;
@@ -120,10 +159,23 @@ function stats(mo){let st=mo.stats||{},keys=["編號","體力","戰鬥","強度"
 function currCard(mo){return `<article id="monster-${mo.id}" class="current"><div class="sprite" onclick="location.href='dex/index.html#monster=${mo.id}'" title="在圖鑑中查看"><img src="${mo.img}"></div><div class="name"><h3 onclick="location.href='dex/index.html#monster=${mo.id}'">${mo.zh}</h3><div class="sub">${mo.en||""}<br>${mo.ja||""}</div><span class="badge">${mo.stage}</span></div><div class="section">基本資料</div><table class="info">${stats(mo)}</table><div class="section">攻擊招式</div><div class="attack"><img src="${mo.atk}"></div></article>`}
 function duration(t){let x=t["時間"]||"";if(x.includes("分鐘"))return parseFloat(x)*60000;if(x.includes("小時"))return parseFloat(x)*3600000;return 0}
 function cond(t){let period="";if(t["日夜"]){let isDay=t["日夜"].startsWith("06:00"),label=isDay?"日間型":"夜間型",cls=isDay?"day":"night";period=`<tr><td>時段</td><td><div class="time-type ${cls}">${label}<br>${t["日夜"]}</div></td></tr>`}return `<table class="info"><tr><td>失誤</td><td>${t["失誤"]||"-"}</td></tr><tr><td>訓練</td><td>${t["訓練"]||"-"}</td></tr><tr><td>戰鬥</td><td>${t["戰鬥"]||"-"}</td></tr><tr><td>勝率</td><td>${t["勝率"]||"-"}</td></tr><tr><td>時間</td><td>${t["時間"]||"-"}</td></tr>${period}${t["條件"]?`<tr><td>條件</td><td>${t["條件"]}</td></tr>`:""}${t["解鎖"]?`<tr><td>解鎖</td><td class="unlock-condition">${t["解鎖"]}</td></tr>`:""}</table>`}
-function target(t,src,i){let mo=m[t.to],key=`${src}_${mo.id}_${i}`,st=G(key,"start"),isOwned=owned(mo.id);return `<article class="target ${isOwned?'is-owned':''}" data-key="${key}" data-ms="${duration(t)}" data-monster="${mo.id}">${isOwned?'<div class="ownedmark"><span class="owned-bigcheck">✓</span>已養過</div>':''}<div class="sprite" onclick="jump('${mo.id}')" title="跳到這隻怪獸的進化資料"><img src="${mo.img}"></div><div class="name"><h3 onclick="jump('${mo.id}')">${mo.zh}</h3><div class="sub">${mo.en||""}<br>${mo.ja||""}</div><span class="badge">${mo.stage}</span></div><div class="section">進化條件</div>${cond(t)}<div class="section">培育計時器</div><div class="record"><div><span>開始時間</span><b class="start">${st?new Date(+st).toLocaleString():"-"}</b></div><div><span>剩餘時間</span><b class="left">-</b></div><div><span>狀態</span><b class="state">${st?"培育中":"尚未開始"}</b></div></div><div class="actions"><button class="primary" onclick="start('${key}')">開始培育</button><button onclick="clearT('${key}')">重設</button><button class="owned-toggle ${isOwned?'on':''}" onclick="toggleOwned('${mo.id}')">${isOwned?'✓ 已養過':'○ 標記已養過'}</button></div></article>`}
+function target(t,src,i){let mo=m[t.to],key=`${src}_${mo.id}_${i}`,isOwned=owned(mo.id);return `<article class="target ${isOwned?'is-owned':''}" data-key="${key}" data-ms="${duration(t)}" data-monster="${mo.id}"><button type="button" class="ownedmark ${isOwned?'on':''}" onclick="toggleOwned('${mo.id}')" title="${isOwned?'取消已養過':'標記已養過'}" aria-label="${isOwned?'取消已養過':'標記已養過'}"><span class="owned-bigcheck">${isOwned?'✓':''}</span></button><div class="sprite" onclick="jump('${mo.id}')" title="跳到這隻怪獸的進化資料"><img src="${mo.img}"></div><div class="name"><h3 onclick="jump('${mo.id}')">${mo.zh}</h3><div class="sub">${mo.en||""}<br>${mo.ja||""}</div><span class="badge">${mo.stage}</span></div><div class="section">進化條件</div>${cond(t)}<div class="section">培育計時器</div><div class="timer-tools" data-key="${key}" data-ms="${duration(t)}"><div class="timer-slot"><button type="button" class="timer-start" onclick="start('${key}')">開始培養</button><div class="timer-running" hidden><strong class="timer-time">--:--:--</strong><span class="timer-controls"><button type="button" class="timer-freeze" onclick="freezeT('${key}')">冷凍</button><button type="button" class="timer-reset" onclick="clearT('${key}')">重設</button></span></div></div></div></article>`}
 function render(){timers.forEach(clearInterval);timers=[];let q=(searchInput?.value||'').trim().toLowerCase(),html='';routes.forEach(rr=>{let src=m[rr.source],all=(src.zh+' '+(src.en||'')+' '+(src.ja||'')).toLowerCase();if(q&&!all.includes(q)&&!rr.targets.some(t=>{let x=m[t.to];return (x.zh+' '+(x.en||'')+' '+(x.ja||'')).toLowerCase().includes(q)}))return;html+=`<section class="route-block stage-${src.stage}" id="route-${src.id}"><div class="route-title">${src.zh}｜${src.stage} → 可進化</div><div class="route-content">${currCard(src)}<div class="target-grid">${rr.targets.map((t,i)=>target(t,src.id,i)).join('')}</div></div></section>`});routesRoot.innerHTML=html;tickers()}
-function tickers(){document.querySelectorAll('.target').forEach(c=>{let key=c.dataset.key,ms=+c.dataset.ms,st=G(key,'start'),left=c.querySelector('.left'),state=c.querySelector('.state');function t(){if(!st||!ms){left.textContent='-';state.textContent=st?'計時中':'尚未開始';return}let x=+st+ms-Date.now();if(x<=0){left.textContent='可進化';state.textContent='已到時間';state.className='state ok';return}let h=Math.floor(x/3600000),mi=Math.floor(x%3600000/60000),se=Math.floor(x%60000/1000);left.textContent=`${String(h).padStart(2,'0')}:${String(mi).padStart(2,'0')}:${String(se).padStart(2,'0')}`;state.textContent='培育中'}t();timers.push(setInterval(t,1000))})}
-function start(k){S(k,'start',Date.now());render()}function clearT(k){try{window.localStorage.removeItem(K(k,'start'))}catch(err){}render()}function toggleOwned(id){S(id,'owned',owned(id)?'0':'1');render();drawDex()}
+function timerState(k){
+  let raw=G(k,"timer");
+  if(raw){try{return JSON.parse(raw)}catch(err){}}
+  let old=G(k,"start");
+  if(old)return {startedAt:+old,elapsedMs:0,frozen:false};
+  return null
+}
+function saveTimer(k,state){S(k,"timer",JSON.stringify(state));try{window.localStorage.removeItem(K(k,"start"))}catch(err){}}
+function elapsedTimer(state){if(!state)return 0;return +(state.elapsedMs||0)+(state.frozen?0:Date.now()-(state.startedAt||Date.now()))}
+function formatTimer(ms){let sec=Math.max(0,Math.ceil(ms/1000)),h=Math.floor(sec/3600);sec%=3600;let mi=Math.floor(sec/60),se=sec%60;return `${String(h).padStart(2,'0')}:${String(mi).padStart(2,'0')}:${String(se).padStart(2,'0')}`}
+function tickers(){document.querySelectorAll('.timer-tools').forEach(box=>{let key=box.dataset.key,ms=+box.dataset.ms,startBtn=box.querySelector('.timer-start'),running=box.querySelector('.timer-running'),time=box.querySelector('.timer-time'),freezeBtn=box.querySelector('.timer-freeze');function t(){let state=timerState(key);if(!state){startBtn.hidden=false;running.hidden=true;box.classList.remove('is-frozen','is-complete');time.textContent=formatTimer(ms);return}let remain=Math.max(0,ms-elapsedTimer(state));startBtn.hidden=true;running.hidden=false;box.classList.toggle('is-frozen',!!state.frozen);box.classList.toggle('is-complete',ms>0&&remain<=0);time.textContent=ms?formatTimer(remain):'--:--:--';freezeBtn.textContent=state.frozen?'解除':'冷凍'}t();timers.push(setInterval(t,1000))})}
+function start(k){saveTimer(k,{startedAt:Date.now(),elapsedMs:0,frozen:false});render()}
+function freezeT(k){let state=timerState(k);if(!state)return;if(state.frozen){state.startedAt=Date.now();state.frozen=false}else{state.elapsedMs=elapsedTimer(state);state.startedAt=0;state.frozen=true}saveTimer(k,state);render()}
+function clearT(k){if(!confirm('確定重設這個培養計時？'))return;try{window.localStorage.removeItem(K(k,'timer'));window.localStorage.removeItem(K(k,'start'))}catch(err){}render()}
+function toggleOwned(id){S(id,'owned',owned(id)?'0':'1');render();drawDex()}
 function openDex(){modal.classList.add('open');drawDex()}function closeDex(){modal.classList.remove('open')}
 function drawDex(){heads.innerHTML=o.map(x=>`<div>${x}</div>`).join('');cols.innerHTML=o.map(st=>`<div class="col">${(s[st]||[]).map(id=>{let x=m[id];return `<div id="dex-${id}" class="node ${owned(id)?'owned':''}" onclick="jump('${id}')">${owned(id)?'<div class="check">✓</div>':''}<img src="${x.img}"><div class="zh">${x.zh}</div><div class="ja">${x.ja||''}</div></div>`}).join('')}</div>`).join('');setTimeout(lines,60)}
 function lines(){svg.innerHTML='';let wr=chart.getBoundingClientRect();e.forEach(([a,b])=>{let A=document.getElementById('dex-'+a),B=document.getElementById('dex-'+b);if(!A||!B)return;let x=A.getBoundingClientRect(),y=B.getBoundingClientRect(),l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x.right-wr.left);l.setAttribute('y1',x.top+x.height/2-wr.top-57);l.setAttribute('x2',y.left-wr.left);l.setAttribute('y2',y.top+y.height/2-wr.top-57);svg.appendChild(l)});svg.setAttribute('width',chart.scrollWidth);svg.setAttribute('height',chart.scrollHeight)}
