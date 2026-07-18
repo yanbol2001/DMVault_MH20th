@@ -1,4 +1,1 @@
-DMVault MH20th V7 Phase 2
-- 關卡卡片化
-- 背景收藏頁與篩選
-- 基本操作頁統一介面
+DMVault MH20th V7 Phase 2.1 - Dex Rebuild
