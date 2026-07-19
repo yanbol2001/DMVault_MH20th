@@ -123,67 +123,122 @@ main{max-width:1500px!important;padding:24px!important}.hero{background:linear-g
 @media(max-width:1150px){.target-grid{grid-template-columns:repeat(2,minmax(250px,1fr))!important}}@media(max-width:760px){main{padding:10px!important}.route-content{grid-template-columns:1fr!important}.target-grid{grid-template-columns:1fr!important}.guide-reference>div+div{border-left:0!important;border-top:1px solid #ddd3c4!important}}
 </style>
 
-<style id="dmvault-v7-phase3-1-single-row">
-/* 進化目標固定單排：桌機與手機皆改為左右滑動，不再換成多行 */
-.route-block .target-grid{
-  display:flex !important;
-  flex-direction:row !important;
-  flex-wrap:nowrap !important;
-  align-items:stretch !important;
-  justify-content:flex-start !important;
-  width:100% !important;
-  max-width:100% !important;
-  min-width:0 !important;
+<style id="dmvault-v7-phase3-3-layout">
+/* Phase 3.3
+   桌機：縮窄卡片並加寬主內容，盡可能一次顯示完整進化目標。
+   手機：來源卡維持正常寬度，進化目標固定單排左右滑動。 */
+
+main{
+  max-width:1920px !important;
+  padding-left:18px !important;
+  padding-right:18px !important;
+}
+
+.route-content{
+  grid-template-columns:220px minmax(0,1fr) !important;
   gap:14px !important;
-  overflow-x:auto !important;
-  overflow-y:hidden !important;
-  padding-bottom:8px;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-x:contain;
-  touch-action:pan-x pan-y;
-  scroll-snap-type:x proximity;
+  min-width:0 !important;
 }
-.route-block .target-grid > .target{
-  flex:0 0 250px !important;
-  width:250px !important;
-  min-width:250px !important;
-  max-width:250px !important;
-  scroll-snap-align:start;
+
+.route-content > *{
+  min-width:0 !important;
 }
-@media(max-width:700px){
-  .route-block .target-grid{
+
+.route-block{
+  overflow:visible !important;
+}
+
+/* 桌機使用自適應欄寬，卡片縮成接近哥吉拉／彩超的比例。 */
+.target-grid{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr)) !important;
+  width:100% !important;
+  min-width:0 !important;
+  gap:12px !important;
+  overflow:visible !important;
+}
+
+.target-grid > .target{
+  width:auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+  flex:none !important;
+  padding:11px !important;
+}
+
+/* 圖片區與文字略縮，避免卡片因內容被撐寬。 */
+.target .thumb,
+.target .image-wrap,
+.target .monster-image{
+  max-width:100% !important;
+}
+
+.target table{
+  width:100% !important;
+  table-layout:fixed !important;
+}
+
+.target th,
+.target td{
+  overflow-wrap:anywhere;
+}
+
+/* 手機和平板：只讓進化目標區左右滑動，不讓整個路線或來源卡一起滑。 */
+@media(max-width:760px){
+  main{
+    width:100% !important;
+    max-width:100% !important;
+    padding:10px 8px !important;
+    overflow-x:hidden !important;
+  }
+
+  .route-block{
+    width:100% !important;
+    max-width:100% !important;
+    overflow:visible !important;
+  }
+
+  .route-content{
+    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
+    padding:10px !important;
+    overflow:hidden !important;
+  }
+
+  .route-content > :first-child{
+    width:100% !important;
+    max-width:100% !important;
+    margin-bottom:12px !important;
+  }
+
+  .target-grid{
     display:flex !important;
     flex-direction:row !important;
     flex-wrap:nowrap !important;
-    grid-template-columns:none !important;
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    gap:10px !important;
     overflow-x:auto !important;
     overflow-y:hidden !important;
+    padding:2px 2px 10px !important;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x pan-y;
+    scroll-snap-type:x proximity;
   }
-  .route-block .target-grid > .target{
-    flex:0 0 250px !important;
-    width:250px !important;
-    min-width:250px !important;
-    max-width:250px !important;
+
+  .target-grid > .target{
+    flex:0 0 200px !important;
+    width:200px !important;
+    min-width:200px !important;
+    max-width:200px !important;
+    scroll-snap-align:start;
   }
 }
 </style>
 
-
-<style id="mobilefix2">
-@media (max-width:700px){
-.route-block{overflow-x:auto !important;}
-.route-block .target-grid{
-display:inline-flex !important;
-flex-wrap:nowrap !important;
-width:max-content !important;
-min-width:max-content !important;
-overflow:visible !important;
-}
-.route-block .target{
-flex:0 0 250px !important;
-}
-}
-</style>
 </head><body><header class="dm-site-header"><div class="dm-site-top"><div class="dm-site-brand"><a href="../index.html">DMVault MH20th</a></div><nav class="dm-site-nav"><a href="../index.html" class="">彩色對打機總覽</a><a href="../guide.html" class="">基本操作</a><a href="../evolution/index.html" class="active">進化條件</a><a href="../evolution/dex/index.html" class="">圖鑑</a><a href="../stage.html" class="">關卡</a><a href="../background.html" class="">背景</a></nav><div class="dm-evolution-search"><input id="search" type="search" placeholder="搜尋怪獸"></div></div></header>
 
 <main style="padding-top:18px"><section class="hero"><div><h1>進化條件</h1><p>下方所有路線已打通，可直接用滾輪瀏覽；上方圖鑑只顯示圖片與名稱。</p></div><div>綠色記號＝已養過／已進圖鑑</div></section>
