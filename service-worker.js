@@ -1,4 +1,4 @@
-const CACHE = 'dmvault-mh-v7-phase3-6';
+const CACHE = 'dmvault-mh-v7-phase3-7';
 const ASSETS = [
   './',
   './index.html',
