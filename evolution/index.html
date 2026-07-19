@@ -123,14 +123,15 @@ main{max-width:1500px!important;padding:24px!important}.hero{background:linear-g
 @media(max-width:1150px){.target-grid{grid-template-columns:repeat(2,minmax(250px,1fr))!important}}@media(max-width:760px){main{padding:10px!important}.route-content{grid-template-columns:1fr!important}.target-grid{grid-template-columns:1fr!important}.guide-reference>div+div{border-left:0!important;border-top:1px solid #ddd3c4!important}}
 </style>
 
-<style id="dmvault-v7-phase3-4-uniform-cards">
-/* Phase 3.4
-   桌機與手機完全共用同一個規則：
-   來源卡、所有進化卡固定相同寬度；永不換行；排不下就左右滑動。 */
+<style id="dmvault-v7-phase3-5-direct-flex-dom">
+/* Phase 3.5
+   直接修改 render() 產生的 DOM：
+   來源卡與所有進化卡皆為 .route-scroll 的直接子元素。
+   桌機、平板、手機完全共用同一套 flex 橫向捲動規則。 */
 
 main{
-  max-width:none !important;
   width:100% !important;
+  max-width:none !important;
   padding:14px !important;
   overflow-x:hidden !important;
 }
@@ -141,8 +142,9 @@ main{
   overflow:hidden !important;
 }
 
-/* 橫向捲動放在整條進化路線，來源卡與進化卡都在同一排。 */
-.route-content{
+/* 單一真正的橫向捲動容器 */
+.route-scroll{
+  box-sizing:border-box !important;
   display:flex !important;
   flex-direction:row !important;
   flex-wrap:nowrap !important;
@@ -153,60 +155,59 @@ main{
   min-width:0 !important;
   gap:12px !important;
   padding:12px !important;
+  background:var(--panel) !important;
+  border:1px solid var(--line) !important;
+  border-top:0 !important;
+  border-radius:0 0 14px 14px !important;
   overflow-x:auto !important;
   overflow-y:hidden !important;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-x:contain;
-  touch-action:pan-x pan-y;
-  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior-x:contain !important;
+  touch-action:pan-x pan-y !important;
+  scroll-snap-type:x proximity !important;
 }
 
-/* 進化目標容器不換行，並接在來源卡後方。 */
-.target-grid{
-  display:flex !important;
-  flex-direction:row !important;
-  flex-wrap:nowrap !important;
-  flex:0 0 auto !important;
-  width:max-content !important;
-  min-width:max-content !important;
-  gap:12px !important;
-  overflow:visible !important;
-}
-
-/* 全部卡片統一成使用者指定的大小。 */
-.route-content > .current,
-.target-grid > .target{
+/* 來源卡與進化卡完全同寬 */
+.route-scroll > .current,
+.route-scroll > .target{
   box-sizing:border-box !important;
   flex:0 0 286px !important;
   width:286px !important;
   min-width:286px !important;
   max-width:286px !important;
   padding:14px !important;
-  scroll-snap-align:start;
+  scroll-snap-align:start !important;
 }
 
-/* 避免表格或長文字把固定寬度撐開。 */
-.route-content .current *,
-.target-grid .target *{
-  min-width:0;
-  max-width:100%;
+/* 不再使用舊的 Grid 容器 */
+.target-grid{
+  display:contents !important;
 }
 
-.route-content table,
-.target-grid table{
+/* 防止表格、圖片與長文字撐破固定卡寬 */
+.route-scroll > .current *,
+.route-scroll > .target *{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+.route-scroll table{
   width:100% !important;
   table-layout:fixed !important;
 }
 
-.route-content th,
-.route-content td,
-.target-grid th,
-.target-grid td{
-  overflow-wrap:anywhere;
+.route-scroll th,
+.route-scroll td{
+  overflow-wrap:anywhere !important;
 }
 
-/* 手機不再另改成單欄；保持與桌機完全相同的固定卡寬與橫向滑動。 */
+/* 手機不切換 DOM、不改成單欄，只縮小頁面邊距 */
 @media(max-width:760px){
+  html,body{
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
   main{
     width:100% !important;
     max-width:100% !important;
@@ -214,32 +215,27 @@ main{
     overflow-x:hidden !important;
   }
 
-  .route-content{
-    display:flex !important;
-    flex-direction:row !important;
-    flex-wrap:nowrap !important;
-    grid-template-columns:none !important;
+  .route-block{
     width:100% !important;
     max-width:100% !important;
-    padding:8px !important;
-    gap:10px !important;
-    overflow-x:auto !important;
-    overflow-y:hidden !important;
+    overflow:hidden !important;
   }
 
-  .target-grid{
+  .route-scroll{
     display:flex !important;
     flex-direction:row !important;
     flex-wrap:nowrap !important;
-    grid-template-columns:none !important;
-    flex:0 0 auto !important;
-    width:max-content !important;
-    min-width:max-content !important;
+    width:100% !important;
+    max-width:100% !important;
     gap:10px !important;
+    padding:8px !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
   }
 
-  .route-content > .current,
-  .target-grid > .target{
+  .route-scroll > .current,
+  .route-scroll > .target{
     flex:0 0 286px !important;
     width:286px !important;
     min-width:286px !important;
@@ -286,7 +282,7 @@ function currCard(mo){return `<article id="monster-${mo.id}" class="current"><di
 function duration(t){let x=t["時間"]||"";if(x.includes("分鐘"))return parseFloat(x)*60000;if(x.includes("小時"))return parseFloat(x)*3600000;return 0}
 function cond(t){let period="";if(t["日夜"]){let isDay=t["日夜"].startsWith("06:00"),label=isDay?"日間型":"夜間型",cls=isDay?"day":"night";period=`<tr><td>時段</td><td><div class="time-type ${cls}">${label}<br>${t["日夜"]}</div></td></tr>`}return `<table class="info"><tr><td>失誤</td><td>${t["失誤"]||"-"}</td></tr><tr><td>訓練</td><td>${t["訓練"]||"-"}</td></tr><tr><td>戰鬥</td><td>${t["戰鬥"]||"-"}</td></tr><tr><td>勝率</td><td>${t["勝率"]||"-"}</td></tr><tr><td>時間</td><td>${t["時間"]||"-"}</td></tr>${period}${t["條件"]?`<tr><td>條件</td><td>${t["條件"]}</td></tr>`:""}${t["解鎖"]?`<tr><td>解鎖</td><td class="unlock-condition">${t["解鎖"]}</td></tr>`:""}</table>`}
 function target(t,src,i){let mo=m[t.to],key=`${src}_${mo.id}_${i}`,isOwned=owned(mo.id);return `<article class="target ${isOwned?'is-owned':''}" data-key="${key}" data-ms="${duration(t)}" data-monster="${mo.id}"><button type="button" class="ownedmark ${isOwned?'on':''}" onclick="toggleOwned('${mo.id}')" title="${isOwned?'取消已養過':'標記已養過'}" aria-label="${isOwned?'取消已養過':'標記已養過'}"><span class="owned-bigcheck">${isOwned?'✓':''}</span></button><div class="sprite" onclick="jump('${mo.id}')" title="跳到這隻怪獸的進化資料"><img src="${mo.img}"></div><div class="name"><h3 onclick="jump('${mo.id}')">${mo.zh}</h3><div class="sub">${mo.en||""}<br>${mo.ja||""}</div><span class="badge">${mo.stage}</span></div><div class="section">進化條件</div>${cond(t)}<div class="section">培育計時器</div><div class="timer-tools" data-key="${key}" data-ms="${duration(t)}"><div class="timer-slot"><button type="button" class="timer-start" onclick="start('${key}')">開始培養</button><div class="timer-running" hidden><strong class="timer-time">--:--:--</strong><span class="timer-controls"><button type="button" class="timer-freeze" onclick="freezeT('${key}')">冷凍</button><button type="button" class="timer-reset" onclick="clearT('${key}')">重設</button></span></div></div></div></article>`}
-function render(){timers.forEach(clearInterval);timers=[];let q=(searchInput?.value||'').trim().toLowerCase(),html='';routes.forEach(rr=>{let src=m[rr.source],all=(src.zh+' '+(src.en||'')+' '+(src.ja||'')).toLowerCase();if(q&&!all.includes(q)&&!rr.targets.some(t=>{let x=m[t.to];return (x.zh+' '+(x.en||'')+' '+(x.ja||'')).toLowerCase().includes(q)}))return;html+=`<section class="route-block stage-${src.stage}" id="route-${src.id}"><div class="route-title">${src.zh}｜${src.stage} → 可進化</div><div class="route-content">${currCard(src)}<div class="target-grid">${rr.targets.map((t,i)=>target(t,src.id,i)).join('')}</div></div></section>`});routesRoot.innerHTML=html;tickers()}
+function render(){timers.forEach(clearInterval);timers=[];let q=(searchInput?.value||'').trim().toLowerCase(),html='';routes.forEach(rr=>{let src=m[rr.source],all=(src.zh+' '+(src.en||'')+' '+(src.ja||'')).toLowerCase();if(q&&!all.includes(q)&&!rr.targets.some(t=>{let x=m[t.to];return (x.zh+' '+(x.en||'')+' '+(x.ja||'')).toLowerCase().includes(q)}))return;html+=`<section class="route-block stage-${src.stage}" id="route-${src.id}"><div class="route-title">${src.zh}｜${src.stage} → 可進化</div><div class="route-scroll">${currCard(src)}${rr.targets.map((t,i)=>target(t,src.id,i)).join('')}</div></section>`});routesRoot.innerHTML=html;tickers()}
 function timerState(k){
   let raw=G(k,"timer");
   if(raw){try{return JSON.parse(raw)}catch(err){}}
