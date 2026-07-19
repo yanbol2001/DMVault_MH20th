@@ -1,7 +1,66 @@
-const CACHE='dmvault-mh-v7-phase3-0';const ASSETS=["./", "./index.html", "./guide.html", "./stage.html", "./background.html", "./style.css", "./manifest.webmanifest", "./evolution/index.html", "./evolution/dex/index.html", "./assets/background/162.png", "./assets/background/163.png", "./assets/background/164.png", "./assets/background/165.png", "./assets/background/166.png", "./assets/background/167.png", "./assets/background/168.png", "./assets/background/169.png", "./assets/background/170.png", "./assets/background/171.png", "./assets/background/172.png", "./assets/background/173.png", "./assets/background/174.png", "./assets/background/175.png", "./assets/background/176.png", "./assets/background/177.png", "./assets/background/178.png", "./assets/manual/001.png", "./assets/manual/002.png", "./assets/manual/003.png", "./assets/manual/004.png", "./assets/manual/005.png", "./assets/manual/006.png", "./assets/manual/007.png", "./assets/manual/008.png", "./assets/manual/009.png", "./assets/manual/010.png", "./assets/manual/011.png", "./assets/manual/012.png", "./assets/stage/apex_mizutsune.png", "./assets/stage/azure_rathalos.png", "./assets/stage/brute_tigrex.png", "./assets/stage/chaotic_gore_magala.png", "./assets/stage/dreadking_rathalos.png", "./assets/stage/furious_rajang.png", "./assets/stage/gore_magala.png", "./assets/stage/green_nargacuga.png", "./assets/stage/grimclaw_tigrex.png", "./assets/stage/khezu.png", "./assets/stage/lucent_nargacuga.png", "./assets/stage/mizutsune.png", "./assets/stage/molten_tigrex.png", "./assets/stage/nargacuga.png", "./assets/stage/rajang.png", "./assets/stage/rathalos.png", "./assets/stage/red_khezu.png", "./assets/stage/shagaru_magala.png", "./assets/stage/silver_rathalos.png", "./assets/stage/silverwind_nargacuga.png", "./assets/stage/soulseer_mizutsune.png", "./assets/stage/stygian_zinogre.png", "./assets/stage/thunderlord_zinogre.png", "./assets/stage/tigrex.png", "./assets/stage/violet_mizutsune.png", "./assets/stage/zinogre.png"];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
-self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+const CACHE = 'dmvault-mh-v7-phase3-6';
+const ASSETS = [
+  './',
+  './index.html',
+  './guide.html',
+  './stage.html',
+  './background.html',
+  './style.css',
+  './manifest.webmanifest',
+  './evolution/index.html',
+  './evolution/dex/index.html'
+];
 
-self.addEventListener('install',()=>self.skipWaiting());
-self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
+self.addEventListener('install', event => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE).then(cache => cache.addAll(ASSETS))
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    Promise.all([
+      caches.keys().then(keys =>
+        Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))
+      ),
+      self.clients.claim()
+    ])
+  );
+});
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+
+  // HTML / page navigation always checks the network first.
+  // This prevents phones and installed PWAs from being stuck on an old evolution page.
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then(cached => cached || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Other assets use stale-while-revalidate.
+  event.respondWith(
+    caches.match(request).then(cached => {
+      const network = fetch(request)
+        .then(response => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => cached);
+
+      return cached || network;
+    })
+  );
+});
