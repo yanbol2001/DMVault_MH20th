@@ -1,7 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-Hant"><head>
+<html lang="zh-Hant" data-dmvault-root="./"><head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>基本操作｜DMVault MH20th</title><link href="style.css" rel="stylesheet"/><link href="manifest.webmanifest" rel="manifest"/>
+<title>基本操作｜DMVault MH20th</title><link href="style.css" rel="stylesheet"/>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MH20th">
+<meta name="application-name" content="DMVault MH20th">
+<meta name="theme-color" content="#101820">
+<link rel="stylesheet" href="pwa/dmvault-pwa.css">
+<script src="pwa/project-config.js"></script>
+<script defer src="pwa/dmvault-pwa.js"></script>
 </head><body class="dmv7-page dmv7-guide">
 <header><div class="top"><div class="brand"><a href="index.html">DMVault MH20th</a></div><nav>
 <a class="" href="index.html">首頁總覽</a><a class="active" href="guide.html">基本操作</a><a class="" href="evolution/index.html">進化條件</a><a class="" href="evolution/dex/index.html">圖鑑</a><a class="" href="stage.html">關卡</a><a class="" href="background.html">背景</a></nav></div></header>
@@ -56,5 +67,5 @@
 <div class="section"><h3>出現條件</h3><ul><li>完全體開始，數碼獸死亡時，約有 30% 機率掉落繼承蛋。</li></ul></div><div class="section"><h3>效果</h3><ul><li>從繼承蛋孵出的數碼獸，可獲得強度加成。</li><li>繼承蛋補正可影響強度值，詳細公式可參考戰鬥章節。</li></ul></div><div class="note"><strong>💡 小提醒</strong><ul><li>繼承蛋不是每次死亡都會出現。</li><li>若目標是完整收集或培育高強度個體，可以留意繼承蛋效果。</li></ul></div>
 </section></div></div></main>
 <footer class="v7-page-footer">DMVault MH20th · V7 Phase 2</footer>
-<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("service-worker.js?v=7.3.6", { updateViaCache: "none" });</script>
+
 <script>const links=[...document.querySelectorAll('.v7-guide-toc a')],sections=links.map(a=>document.querySelector(a.getAttribute('href')));const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}})},{rootMargin:'-20% 0px -70%'});sections.forEach(x=>x&&io.observe(x));</script></body></html>

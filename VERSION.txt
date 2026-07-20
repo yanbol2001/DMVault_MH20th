@@ -1,5 +1,3 @@
-DMVault MH20th V7 Phase 3.0
-- 單列總小時倒數
-- 新增冷凍／解除冷凍
-- 重設與倒數同列
-- 已養過縮小至右上角並同步圖鑑
+DMVault MH20th V7.4.0 PWA
+Build: 2026-07-20
+GA4: G-CL1PZNMQTZ
